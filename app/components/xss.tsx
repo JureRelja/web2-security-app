@@ -26,7 +26,6 @@ export default function XSS({ enabled }: { enabled: boolean }) {
     const raw = document.cookie.split('; ').find(c => c.startsWith('secure_cookie='));
     const decoded = raw ? decodeURIComponent(raw.split('=')[1]) : undefined;
 
-    console.log('Dohvaćeni kolačić:', decoded);
     setCookie(decoded);
     setCookieLoaded(true);
   }

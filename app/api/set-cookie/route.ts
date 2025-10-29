@@ -10,7 +10,7 @@ export async function POST() {
   const { xss_enabled } = res.rows[0]
 
   const name = 'secure_cookie';
-  const value = 'Ovo bi trebao biti zaštićeni kolačić koji ne bi trebao biti dostupan putem JavaScripta.';
+  const value = 'KkKBpWVqszTEca83g8QBXzeYBhhTi01a9UPyKx192AI=';
   const httpOnly = !xss_enabled;
 
   cookiesStore.set({ name, value: value, httpOnly, path: '/' });
