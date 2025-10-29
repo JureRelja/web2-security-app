@@ -1,6 +1,7 @@
 'use server';
 
 import { Client } from 'pg';
+import bcrypt from 'bcrypt';
 
 export async function toggleXSS(enabled: boolean) {
   const client = new Client()
@@ -22,14 +23,17 @@ export async function storePassword(password: string) {
   const client = new Client()
   await client.connect()
 
-  const passwordForStorage = password
+  let passwordForStorage = password
   
   const res = await client.query('SELECT unsecure_data_saving_enabled FROM vunerabilities WHERE id = 1')
   const { unsecure_data_saving_enabled } = res.rows[0]
 
   if (!unsecure_data_saving_enabled) {
+    passwordForStorage = bcrypt.hashSync(passwordForStorage, 10);
   }
 
   await client.query('INSERT INTO passwords (password) VALUES ($1)', [passwordForStorage])
   await client.end()
+
+  return passwordForStorage;
 }
