@@ -1,10 +1,10 @@
 'use server';
 
-import { Client } from 'pg';
 import bcrypt from 'bcrypt';
+import { makePgClient } from './pg-client';
 
 export async function toggleXSS(enabled: boolean) {
-  const client = new Client()
+  const client = makePgClient()
     await client.connect()
     
     await client.query('UPDATE vunerabilities SET xss_enabled = $1 WHERE id = 1', [enabled])
@@ -12,7 +12,7 @@ export async function toggleXSS(enabled: boolean) {
 };
 
 export async function toggleUnsecureDataSaving(enabled: boolean) {
-  const client = new Client()
+  const client = makePgClient()
     await client.connect()
     
     await client.query('UPDATE vunerabilities SET unsecure_data_saving_enabled = $1 WHERE id = 1', [enabled])
@@ -20,7 +20,7 @@ export async function toggleUnsecureDataSaving(enabled: boolean) {
 };
 
 export async function storePassword(password: string) {
-  const client = new Client()
+  const client = makePgClient()
   await client.connect()
 
   let passwordForStorage = password

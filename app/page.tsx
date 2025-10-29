@@ -1,9 +1,9 @@
-import { Client } from 'pg';
 import XSS from './components/xss';
 import HashlessPasswords from "./components/hashless-passwords";
+import { makePgClient } from './pg-client';
 
 export default async function Home() {
-  const client = new Client()
+  const client = makePgClient()
   await client.connect()
   
   const response = await client.query('SELECT vunerabilities.xss_enabled, vunerabilities.unsecure_data_saving_enabled FROM vunerabilities WHERE id = 1')
