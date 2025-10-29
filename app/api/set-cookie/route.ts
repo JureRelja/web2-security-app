@@ -6,6 +6,7 @@ export async function POST() {
   const cookiesStore = await cookies();
 
   const client = makePgClient()
+  await client.connect();
   const res = await client.query('SELECT xss_enabled FROM vunerabilities WHERE id = 1')
   const { xss_enabled } = res.rows[0]
 
