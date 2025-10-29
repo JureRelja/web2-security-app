@@ -5,6 +5,8 @@ import { NextResponse } from 'next/server';
 export async function POST() {
   const cookiesStore = await cookies();
 
+  cookiesStore.delete('secure_cookie');
+
   const client = makePgClient()
   await client.connect();
   const res = await client.query('SELECT xss_enabled FROM vunerabilities WHERE id = 1')

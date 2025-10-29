@@ -2,7 +2,6 @@
 
 import bcrypt from 'bcrypt';
 import { makePgClient } from './pg-client';
-import { cookies } from 'next/headers';
 
 export async function toggleXSS(enabled: boolean) {
   const client = makePgClient()
@@ -10,9 +9,6 @@ export async function toggleXSS(enabled: boolean) {
   
   await client.query('UPDATE vunerabilities SET xss_enabled = $1 WHERE id = 1', [enabled])
   await client.end()
-
-  const cookiesStore = await cookies();
-  cookiesStore.delete('secure_cookie');
 };
 
 export async function toggleUnsecureDataSaving(enabled: boolean) {
