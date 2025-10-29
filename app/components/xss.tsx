@@ -5,6 +5,7 @@ import { toggleXSS } from "../actions";
 
 export default function XSS({ enabled }: { enabled: boolean }) {
   const [isLoading, setIsLoading] = useState(false);
+  const [isReady, setIsReady] = useState(false);
   const [vulnerabilityEnabled, setVulnerabilityEnabled] = useState(enabled);
 
   const [cookie, setCookie] = useState<string | undefined>(undefined);
@@ -14,8 +15,8 @@ export default function XSS({ enabled }: { enabled: boolean }) {
     e.preventDefault()
 
     setIsLoading(true);
-    await toggleXSS(!enabled)
-    window.location.reload()
+    await toggleXSS(!vulnerabilityEnabled)
+    window.location.reload();
   }
   
   const submitForm = (e: React.MouseEvent<HTMLInputElement>) => {
@@ -30,10 +31,16 @@ export default function XSS({ enabled }: { enabled: boolean }) {
     setCookieLoaded(true);
   }
 
-  useEffect(() => {
+  const createCookie = async () => {
     fetch('/api/set-cookie', {
       method: 'POST',
+    }).finally(() => {
+      setIsReady(true);
     });
+  }
+
+  useEffect(() => {
+    createCookie();
   }, [vulnerabilityEnabled]);
   
   return (
@@ -46,7 +53,7 @@ export default function XSS({ enabled }: { enabled: boolean }) {
           checked={vulnerabilityEnabled}
           onChange={(e) => setVulnerabilityEnabled(e.target.checked)}
           onClick={submitForm}
-          disabled={isLoading}
+          disabled={isLoading || !isReady}
         />
         <label htmlFor="xss-toggle" className="ml-2 text-xl">
           Ranjivost uključena
@@ -57,7 +64,7 @@ export default function XSS({ enabled }: { enabled: boolean }) {
         className="mt-4 px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50 cursor-pointer"
         type="button"
         onClick={handleCookie}
-        disabled={isLoading}
+        disabled={isLoading || !isReady}
         >
         Dohvati kolačić
       </button>

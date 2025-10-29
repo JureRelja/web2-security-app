@@ -14,8 +14,9 @@ function HashlessPasswords({ enabled }: { enabled: boolean }) {
     e.preventDefault()
 
     setIsLoading(true);
-    await toggleUnsecureDataSaving(!enabled)
-    window.location.reload()
+    await toggleUnsecureDataSaving(!vulnerabilityEnabled)
+    setVulnerabilityEnabled(!vulnerabilityEnabled);
+    setIsLoading(false);
   }
     
   const submitForm = (e: React.MouseEvent<HTMLInputElement>) => {
@@ -30,8 +31,8 @@ function HashlessPasswords({ enabled }: { enabled: boolean }) {
       const storedPassword = await storePassword(password)
       setRecentlyStoredPassword(storedPassword);
       setPassword("");
-      setIsLoading(false);
     }
+    setIsLoading(false);
   }
 
   return (
